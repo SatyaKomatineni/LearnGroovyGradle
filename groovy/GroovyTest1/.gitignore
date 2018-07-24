@@ -1,0 +1,5 @@
+# Ignore the bin directory
+/bin
+
+# Any class file anyway
+*.class
