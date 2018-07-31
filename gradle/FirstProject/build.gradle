@@ -1,0 +1,45 @@
+/*
+ * To exercise basic gradle build
+ * To see the differences between buildscript and outside buildscript
+ * See what configurations are out of the box with a plain gradle build
+ *
+ * The configuration avaialble are different and distinct
+ * in the buildscript and outside buildscript.
+ * In buildscript: class
+ * In rest of the script: none
+ *
+ * A configuration represents a set of files.
+ */
+ 
+//Project.getBuildscript(): ScriptHandler is the closure delegate
+//So look fo the method signatures on ScriptHanlder class
+buildscript {
+	println "in buildscript"
+	for (con in configurations)
+ 	{
+ 		   println "From buildscript"
+ 		   //This will read ":classpath"
+ 		   println con
+		   println "End From buildscript"
+ 	}
+ 
+	 //This will read (filename)
+	 println sourceFile
+  }
+ 
+ configurations.create("myconfig");
+ //Project is the closure delegate
+ //So look fo the method signatures on Project class
+ task HelloWorld {
+ 	doLast{
+ 		for (con in configurations)
+ 		{
+			 //you will see ":myconfig" here
+ 			  println con
+ 		}
+ 	 println("hello")
+ 	 //Creating a config adds a dynamic method/object
+ 	//with that config name
+ 	println configurations.myconfig.getName()
+ 	}
+ }
