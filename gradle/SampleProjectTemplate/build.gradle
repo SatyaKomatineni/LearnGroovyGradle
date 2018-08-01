@@ -1,0 +1,11 @@
+/*
+ * Comments
+ */
+ 
+//Project.getBuildscript(): ScriptHandler is the closure delegate
+//So look fo the method signatures on ScriptHanlder class
+buildscript {
+	println "in buildscript"
+  }
+ 
+println "Rest of the script begins"
