@@ -1,0 +1,106 @@
+/*
+ * Understand tasks
+ */
+
+import org.gradle.api.task;
+
+//***************************************************************
+//Project.getBuildscript(): ScriptHandler is the closure delegate
+//So look for the method signatures on ScriptHanlder class
+//***************************************************************
+buildscript {
+	println "in buildscript"
+}
+ 
+println "Rest of the script begins"
+
+//Creating without a formality
+task hello {
+  println 'Creating a task called hello'
+  doLast {
+    println 'Executing hello'
+  }
+}
+
+//Creating with a function call
+task ("hello2") {
+  println 'Creating a task called hello2 as a function call'
+  doLast {
+    println 'Executing hello2'
+  }
+}
+
+task (hello3) {
+  println 'Creating a task called hello3 as a function call'
+  doLast {
+    println 'Executing hello3'
+  }
+}
+
+tasks.create('hello4') {
+  println 'Creating a task called hello4 using task container'
+  doLast {
+    println 'Executing hello4'
+  }
+}
+
+
+
+//**************************************************
+//Define a task called build 
+//so that it can be made a default task
+//later.
+//**************************************************
+task build {
+  //we can do this later to show you it can be done
+  //by locating this task.
+  //
+  //Or here if you like: uncomment if desired
+  //dependsOn hello, hello2, hello3
+}
+
+//**************************************************
+// Examine what happens to a task
+//
+// You will see following printed
+// *********************************
+// Name of the build task is:(build)
+// Path of the build task is:(:build)
+// build task object itself:(task ':build')
+//**************************************************
+println ("Name of the build task is:(" + build.name + ")")
+println ("Path of the build task is:(" + build.path+ ")")
+println ("build task object itself:(" + build+ ")")
+
+//**************************************************
+// Define a default task to execute by running
+// gradle (with out any args)
+//**************************************************
+defaultTasks 'build'
+
+//**************************************************
+// Locate build task
+// Define a dependency on another task
+// This is seen as a way to locate the task named build
+//**************************************************
+build {
+  dependsOn hello, hello2, hello3, hello4
+
+  doLast {
+    println 'All dependent tasks completed'
+    println 'build finished'
+  }
+}
+
+/*
+* Invalid Block
+**********************************************
+* The name build is now allocated to an object
+* it points to a task object called build
+* defaultTasks is a method that takes a list of strings
+**********************************************
+defaultTasks build
+***********************************************
+*/
+println build
+println build.name
