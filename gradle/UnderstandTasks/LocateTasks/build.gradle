@@ -1,0 +1,80 @@
+/*
+ * Locate Gradle tasks
+ */
+
+println "Start of Script"
+
+//**************************************************
+//Create a task
+//**************************************************
+task hello {
+  println 'Creating a task called hello'
+  doLast {
+    println 'Executing hello'
+  }
+}
+
+//**************************************************
+//Prepare default tasks
+//**************************************************
+task build {}
+
+defaultTasks 'build'
+
+//Locate task called build and configure it
+build {
+  dependsOn hello
+
+  doLast {
+    println 'All dependent tasks completed'
+    println 'build finished'
+  }
+}
+
+//**************************************************
+// Locate tasks by dynamic properties
+//**************************************************
+
+//when a task is defined, it becomes a (dynamic) property
+//of the project obect. Being a property of the project object
+//it can be accessed as a variable in this script.
+
+println 'Direct access: Name of hello project is:' + hello.name
+//Or
+println 'Direct access: Name of hello project is:' + project.hello.name
+
+
+//**************************************************
+// Using the task container: project.tasks
+//**************************************************
+
+//Using map like grooy behavior
+def helloName = tasks.hello.name
+println "From container direct access: Name of hello project is:${helloName}"
+
+def helloTaskObject = tasks.getByName('hello')
+println "From tasks: ${helloTaskObject.name}"
+
+//You can configure that task object now
+//This will not work to configure it
+// **** helloTaskObject {} **
+//because it is an object and not a method
+//Closures syntax work on methods
+//So use the correct method to configure
+helloTaskObject.configure {
+  doLast {
+    println 'hello task explict configuration'
+  }
+}
+
+//Whereas this works because
+//getByName can take 2 args.
+//the second arg is config closure
+//internally the getByName does both
+//1. locate the task
+//2. Run the configure on it :)
+tasks.getByName('hello') {
+  doLast {
+    println 'hello task implicit configuration'
+  }
+}

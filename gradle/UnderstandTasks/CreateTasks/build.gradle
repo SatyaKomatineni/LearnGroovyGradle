@@ -1,20 +1,25 @@
 /*
- * Understand tasks
+ * Understand Gradle tasks: Creating tasks
  */
-
-import org.gradle.api.task;
 
 //***************************************************************
 //Project.getBuildscript(): ScriptHandler is the closure delegate
 //So look for the method signatures on ScriptHanlder class
 //***************************************************************
 buildscript {
-	println "in buildscript"
+  //This line appears first
+	println "1. in buildscript"
 }
- 
-println "Rest of the script begins"
+
+//Rest of the execution 
+println "2. Rest of the script begins"
+
+//**************************************************
+//Many ways of creating tasks in gradle
+//**************************************************
 
 //Creating without a formality
+//**************************************************
 task hello {
   println 'Creating a task called hello'
   doLast {
@@ -23,6 +28,7 @@ task hello {
 }
 
 //Creating with a function call
+//**************************************************
 task ("hello2") {
   println 'Creating a task called hello2 as a function call'
   doLast {
@@ -30,6 +36,8 @@ task ("hello2") {
   }
 }
 
+//Strange syntax. Creatin without string quotes
+//**************************************************
 task (hello3) {
   println 'Creating a task called hello3 as a function call'
   doLast {
@@ -37,6 +45,8 @@ task (hello3) {
   }
 }
 
+//Using the taskContainer (collection) to create
+//**************************************************
 tasks.create('hello4') {
   println 'Creating a task called hello4 using task container'
   doLast {
@@ -44,23 +54,22 @@ tasks.create('hello4') {
   }
 }
 
-
-
 //**************************************************
 //Define a task called build 
 //so that it can be made a default task
-//later.
+//later, so we have an anchor point to call tasks
 //**************************************************
 task build {
-  //we can do this later to show you it can be done
-  //by locating this task.
-  //
-  //Or here if you like: uncomment if desired
+  //we can define dependencies here during creation
+  // Or locate this task by name and define the dependencies there
+
+  //Uncomment the following if you want to define them
   //dependsOn hello, hello2, hello3
 }
 
 //**************************************************
-// Examine what happens to a task
+// Examine what happens to a task.
+// API can be found at org.gradle.api.task;
 //
 // You will see following printed
 // *********************************
@@ -78,7 +87,20 @@ println ("build task object itself:(" + build+ ")")
 //**************************************************
 defaultTasks 'build'
 
+/*
+* Invalid Block
+**********************************************
+* The name build is now allocated to an object
+* it points to a task object called build
+* defaultTasks is a method that takes a list of strings
+**********************************************
+defaultTasks build
+***********************************************
+*/
+
 //**************************************************
+// Goal: Define dependencies for the tasks
+//
 // Locate build task
 // Define a dependency on another task
 // This is seen as a way to locate the task named build
@@ -91,16 +113,3 @@ build {
     println 'build finished'
   }
 }
-
-/*
-* Invalid Block
-**********************************************
-* The name build is now allocated to an object
-* it points to a task object called build
-* defaultTasks is a method that takes a list of strings
-**********************************************
-defaultTasks build
-***********************************************
-*/
-println build
-println build.name
